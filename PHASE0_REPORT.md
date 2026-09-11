@@ -1,27 +1,41 @@
 # PHASE0_REPORT
 
-Prepared as the mandatory Phase 0 gate before any code is written or
-experiment is launched, per the task's explicit instruction to STOP after
-this report. Companion documents: `EXISTING_WORK_AUDIT.md`,
-`NOVELTY_LEDGER.md`, `RESEARCH_PLAN.md`, `literature/novelty_matrix.csv`.
+Revised 2026-09-11 (same day) after the user supplied Study A, which was
+missing from the first pass. Prepared as the mandatory Phase 0 gate before
+any code is written or experiment is launched, per the task's explicit
+instruction to STOP after this report. Companion documents:
+`EXISTING_WORK_AUDIT.md`, `NOVELTY_LEDGER.md`, `RESEARCH_PLAN.md`,
+`literature/novelty_matrix.csv`.
 
 ## 1. Existing work
 
-Two notebooks exist: `Seis2Rock_Complete_Project_with_ML_audit.ipynb`
+Three notebooks now exist. `Seis2Rock_Complete_Project_with_ML_audit.ipynb`
 (earlier stream, patch-based AVONet architecture, contains a valuable
 "ML Audit" section — leakage checks, buffered spatial CV, Sw label-
 permutation test, CO₂ classification head) and `GEOP592_RWPGNN_FINAL.ipynb`
 (more mature, full-trace CNN with an exact differentiable layered-Zoeppritz
 forward operator, well-count scaling experiments, and a buffered/multi-seed
-version of the same scaling experiment). Both replicate Seis2Rock (Corrales
+version of the same scaling experiment) both replicate Seis2Rock (Corrales
 et al. 2024) as a baseline and compare against Das & Mukerji (2020)
-PetroNet/Cascaded baselines with MC-Dropout uncertainty. Full detail in
-`EXISTING_WORK_AUDIT.md`.
+PetroNet/Cascaded baselines with MC-Dropout uncertainty.
+`Smeaheia_AVO_error_propagation.ipynb` (**Study A**, supplied by the user
+and added to the repo in this revision) is a validated, symbolic (sympy)
+sensitivity analysis of how independent caprock/reservoir Vp errors shift
+the Shuey A/B AVO attributes at the Smeaheia top reservoir, benchmarked to
+5 decimals against an independent Mathematica implementation. Full detail
+in `EXISTING_WORK_AUDIT.md`.
 
-**Correction to the task's framing:** "Existing Study A" (velocity
-perturbation → Shuey A/B) is **not present in this repository or its git
-history**. Everything about it below is planning for future work, not an
-audit of existing work.
+**Correction to the first Phase 0 pass:** that pass stated "Existing Study
+A" was not present anywhere in the repository or its git history. That was
+an accurate statement about the repository's contents *at that time* — the
+notebook was not committed and not discoverable — but Study A does exist
+as separate prior work, now added. Its important, correct scope limit
+(flagged per the task's own taxonomy in `EXISTING_WORK_AUDIT.md` §3): it
+perturbs Vp **directly** at the elastic-model level, not via a processing
+mechanism (no NMO/RMO, migration-velocity, or angle-error simulation
+exists in it) — it must not be described as "processing-induced velocity
+uncertainty," and it does not yet connect to the reservoir properties
+(φ/Vsh/Sw) the rest of this PhD is about.
 
 ## 2. Reproducibility status
 
@@ -45,6 +59,12 @@ number is used in a paper.
 - Limitations sections in both notebooks are unusually candid (inverse-
   crime risk, matched forward physics, asymmetric identifiability all
   already named by the notebooks' own authors/AI-assistance).
+- Study A is a genuinely rigorous, independently-benchmarked piece of work
+  (its own validation cell reproduces a separate Mathematica notebook's
+  outputs to 5 decimals) and already delivers one real, citable result:
+  at Smeaheia, the AVO gradient B is ~14× more sensitive than the intercept
+  A to a differential Vp error between caprock and reservoir, with Class
+  III→IV misclassification possible at ~3–5% differential error.
 
 ## 4. Scientific weaknesses
 
@@ -99,15 +119,20 @@ by anything currently in the repository — full text in `RESEARCH_PLAN.md`.
 
 ## 8. Experiments required
 
-Per `RESEARCH_PLAN.md`: (1) build Study A from scratch (velocity/RMO →
-Shuey gradient, anchored on Sarkar, Baumel & Larner 2002); (2) extend to a
-rock-physics/AVA-class separability analysis for φ/Vsh/Sw; (3) build a
+Per `RESEARCH_PLAN.md`: (1) extend Study A one physical layer back — perturb
+φ/Vsh/Sw and propagate through the existing Gassmann rock-physics model to
+Vp/Vs/ρ and then to Shuey/Zoeppritz AVA attributes, rather than perturbing
+Vp directly; (2) separately add the complementary, currently-absent
+processing-induced mechanism (moveout/velocity-analysis error → AVO
+gradient bias, anchored on Sarkar, Baumel & Larner 2002) — do not conflate
+this with Study A's elastic-model-level mechanism; (3) extend to a full
+rock-physics/AVA-class separability analysis for φ/Vsh/Sw; (4) build a
 property-specific resolvability index from established methods (Fisher-
 information-adjacent literature exists but no ready-made seismic-QI index
 was found — this must be developed carefully, not invented arbitrarily, in
-Phase 3); (4) re-scope Paper 2 around calibration + resolvability-linkage
+Phase 3); (5) re-scope Paper 2 around calibration + resolvability-linkage
 after reading Li et al. (2024) ×2 and Wu et al. (2024) in full text
-(unfinished in this pass — abstract-level access only); (5) a real Volve
+(unfinished in this pass — abstract-level access only); (6) a real Volve
 data audit before any blind-well design is finalized.
 
 ## 9. Data required
@@ -149,10 +174,12 @@ and well-to-seismic tie for the Volve phase. Detail in `RESEARCH_PLAN.md`.
 ## 13. Immediate next 10 actions
 
 See `RESEARCH_PLAN.md` §Immediate next 10 actions — headline items: (1)
-user reviews this package; (2) locate or rebuild Study A; (3) read the full
-text of the three closest 2024 Geophysics papers before finalizing Paper
-2's scope; (4) fix the PetroNet cross-notebook inconsistency; (5)
-independently verify Volve data availability against the real data room.
+user reviews this package; (2) confirm whether any further prior work
+(a property-level sensitivity study, a processing/RMO study) exists beyond
+Study A; (3) read the full text of the three closest 2024 Geophysics
+papers before finalizing Paper 2's scope; (4) fix the PetroNet
+cross-notebook inconsistency; (5) independently verify Volve data
+availability against the real data room.
 
 ## STOP
 

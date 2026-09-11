@@ -1,9 +1,11 @@
 # Existing Work Audit
 
-Date: 2026-09-11
+Date: 2026-09-11 (revised same day: Study A supplied by user and added below)
 Scope: everything currently committed to this repository on `main` /
 `claude/phd-qi-resolvability-framework-ou8o1u`. Nothing was modified to
-produce this audit — it is read-only.
+produce this audit — it is read-only with respect to the pre-existing
+notebooks; `Smeaheia_AVO_error_propagation.ipynb` (Study A) was added
+verbatim, as supplied by the user, and is otherwise untouched.
 
 ## 0. What is actually in the repository
 
@@ -11,6 +13,7 @@ produce this audit — it is read-only.
 README.md                                        (1 line: "ML 592 KFUPM Term Project")
 GEOP592_RWPGNN_FINAL.ipynb                        (54 cells, ~12 MB with embedded figures)
 Seis2Rock_Complete_Project_with_ML_audit.ipynb    (48 cells, ~13 MB with embedded figures)
+Smeaheia_AVO_error_propagation.ipynb              (23 cells, ~0.5 MB — Study A, added 2026-09-11)
 ```
 
 `git log` shows a long history of iterative Colab notebook uploads and
@@ -20,17 +23,18 @@ etc.) converging on the two notebooks above. Only these two survive on the
 current branch; the deleted intermediates are recoverable from git history
 if needed but are not treated as "current" work here.
 
-**Important scope correction.** The task description refers to a preliminary
-"Existing Study A" — a velocity-perturbation → Shuey A/B coefficient
-experiment. **No such notebook, script, or figure exists anywhere in this
-repository or its git history.** I searched both notebooks' full text for
-`Shuey`, `velocity perturbation`, `RMO`, and `migration velocity` — the only
-hits are unrelated variable names (`PoststackLinearModelling`'s `nt0`
-argument, coincidentally matched by a bad regex). If Study A exists, it is
-either in a different repository, a local/uncommitted file, or was described
-conceptually but not yet implemented. **Treat Study A as NOT YET PART OF
-THIS CODEBASE** until the user supplies it. The PHASE0_REPORT reflects this
-as a gap, not an oversight on my part.
+**Correction to the original Phase 0 pass.** The first version of this
+audit stated that "Existing Study A" did not exist anywhere in this
+repository, based on a text search of the two notebooks that were present
+at the time. The user has since supplied
+`Smeaheia_AVO_error_propagation.ipynb` directly. It was not previously
+committed to this repository or discoverable by searching it — the
+original claim was correct as a statement about repository contents at
+that time, but Study A does exist as separate prior work. It is audited in
+§3 below and no longer treated as a gap in the PhD's existing portfolio,
+though it does not yet connect to the reservoir-property (φ/Vsh/Sw)
+resolvability question — see §3's "What it does NOT do" and the revised
+`RESEARCH_PLAN.md`.
 
 ## 1. `Seis2Rock_Complete_Project_with_ML_audit.ipynb` — the earlier stream
 
@@ -157,7 +161,107 @@ baseline has any UQ, and that is epistemic-only); property identifiability
 is asymmetric (φ has the strongest AVO sensitivity in this rock-physics
 regime, Vsh/Sw rely more on the well-supervision term at low N).
 
-## 3. Reproducibility status
+## 3. `Smeaheia_AVO_error_propagation.ipynb` — Study A (added 2026-09-11)
+
+**What it does.** A self-contained (no external data file, no GPU) analytic
+error-propagation study: how do independent relative errors in caprock and
+reservoir P-wave velocity (r_ΔVp1, r_ΔVp2, each spanning ±10%) shift the
+Shuey (1985) two-term AVO intercept A and gradient B at the Smeaheia top
+reservoir (shale over CO₂-sand), and can that shift cause an apparent AVO
+class change?
+
+- **Model**: a single-interface, two-layer elastic model (caprock: Vp=2600,
+  Vs=1200, ρ=2350; CO₂-sand: Vp=1950, Vs=1180, ρ=2030 m/s, kg/m³) built from
+  the real Smeaheia CO₂-storage rock-physics literature (Gassmann fluid
+  substitution with Batzle & Wang 1992 CO₂ properties, consistent with
+  Fawad, Hansen & Mondol 2021, *IJGGC* 109). A brine-baseline case is
+  carried alongside for reference.
+- **Method**: `sympy` symbolic differentiation of the exact Shuey
+  (Wiggins/Castagna–Backus 1993 parameterization) A, B (via the
+  intermediate `BB` term), and C coefficients with respect to Vp1 and Vp2,
+  converted to *relative*-error sensitivity coefficients k_A, k_B, k_C via
+  r_ΔVp1/r_ΔVp2. This is a local (linearized) sensitivity analysis — the
+  same conceptual object as a Jacobian/Fisher-information diagonal term,
+  though the notebook does not use that language.
+- **Validation (real, and correctly done):** Cell 8 reproduces six numeric
+  outputs of a separate, pre-existing Mathematica notebook
+  ("Error_propagation_from_VP_to_Shuey_2_and_3_terms") to 5 decimal places,
+  using the Mathematica notebook's own model values — i.e. this Python
+  implementation is an independently-checked port, not a from-scratch
+  reimplementation of unknown correctness. This is exactly the kind of
+  benchmark-against-a-known-source practice the task's coding-safety rules
+  ask for.
+- **Results (Smeaheia CO₂ case, verified in the notebook's own output):**
+  baseline A₀=−0.214, B₀=−0.021 (Class III); sensitivity k_A=+2.23,
+  k_B=−31.28, k_C=+3.43 — **the gradient B is ~14× more sensitive than the
+  intercept A** to a differential Vp error. Common-mode errors (both layers
+  shift the same way) cancel exactly in the linear theory, because A/B/C
+  each propagate only the *differential* r_ΔVp1−r_ΔVp2 (a real, derivable
+  property of the Shuey formulas, correctly shown symbolically). B is
+  markedly nonlinear in the error (traced correctly to the impedance
+  contrast sitting in the denominator of the `BB` term) — the linear k_B
+  only holds within a few percent. **Class III → apparent Class IV
+  misclassification occurs at ≈3–5% differential Vp error** (where the
+  B=0 contour crosses the worst-case-error spoke), while the intercept A
+  stays negative (bright-spot-on-stack character preserved) across the
+  full ±10% grid explored.
+
+**What kind of uncertainty this is — important classification, per the
+task's own taxonomy.** This notebook perturbs the **elastic-model log
+velocity** (Vp1, Vp2) directly, at the level of the two-layer Shuey
+calculation itself. It does **not** simulate a processing mechanism
+(NMO/RMO, migration-velocity error, or angle-estimation error) that would
+*produce* such a Vp perturbation or an associated angle-dependent moveout
+residual — there is no time/offset/moveout representation anywhere in the
+notebook, only closed-form A/B(Vp1,Vp2). Per the task's explicit
+instruction, this must **not** be described as "processing-induced
+velocity uncertainty." It is an **elastic-model (rock-physics-level)
+velocity-perturbation study**, directly analogous in spirit to a
+petrophysical-parameter sensitivity study, but stopping one physical layer
+short of full rock-physics: it perturbs Vp directly rather than perturbing
+φ/Vsh/Sw and propagating through Gassmann to Vp. Sarkar, Baumel & Larner
+(2002) — the moveout-error-into-AVO-gradient mechanism cited in the
+original literature scan — is a *different*, complementary mechanism
+(processing/velocity-analysis-induced) and is not implemented here.
+
+**What it does NOT do (gaps relative to Objective 1):**
+1. Does not connect Vp error back to the reservoir properties φ, Vsh, Sw
+   (no rock-physics inversion direction; Vp is perturbed directly, not
+   derived from perturbed φ/Vsh/Sw via Gassmann).
+2. Perturbs Vp only — Vs and ρ are held fixed, so cross-parameter
+   covariance (e.g., a Vp error correlated with a Vp/Vs or density error
+   through the same rock-physics model) is not explored.
+3. Uses the Shuey two-term (intercept/gradient) approximation at a single
+   interface, not the full-trace, all-angle, exact Zoeppritz forward model
+   used in `GEOP592_RWPGNN_FINAL.ipynb` — the two notebooks are not
+   currently built on the same numerical forward model, though both use
+   the same Smeaheia top-reservoir/CO₂ geological setting.
+4. Does not touch the Smeaheia 2D property fields (`phi_2D`, `vsh_2D`,
+   `sw_2D`) used by the other two notebooks — it is a single-interface,
+   two-layer analytic case, not a 2D section.
+5. Does not implement moveout/RMO, wavelet, or amplitude-fidelity
+   uncertainty (consistent with the other two notebooks — none of the
+   three notebooks currently touch these).
+
+**Reproducibility:** High. No external data file, no GPU, no unpinned
+external git dependency (only `numpy`, `sympy`, `matplotlib` — all
+standard). The only soft dependency is `ffmpeg` for the Cell 18 animation
+(`FFMpegWriter`); if `ffmpeg` is unavailable the notebook would fail at
+that cell even though every quantitative result (Cells 8, 10, 12, 15, 20)
+is unaffected. No `environment.yml` yet, consistent with the rest of the
+repo.
+
+**Stated limitations (from the notebook's own §8 summary, verbatim in
+substance):** all conclusions are specific to the Smeaheia top-reservoir
+baseline (A₀, B₀ near the Class III/IV boundary make it unusually
+sensitive); the sign and magnitude of k_B depend on the baseline and the
+polarity of the impedance contrast — the original Mathematica case (a
+different, Class-IV-ish baseline) shows opposite-sign but similar-order-
+of-magnitude sensitivity, so the *specific* numbers do not generalize
+beyond Smeaheia without redoing the derivative evaluation at the new
+baseline.
+
+## 4. Reproducibility status
 
 | Item | Status |
 |---|---|
@@ -167,9 +271,9 @@ regime, Vsh/Sw rely more on the well-supervision term at low N).
 | Cross-notebook consistency | Seis2Rock numbers match to 3 decimals between both notebooks (good). PetroNet/Cascaded numbers do NOT match between the two notebooks (bad — different train/test protocol, not flagged). |
 | Dependency on external package | Both notebooks `git clone` the `DeepWave-KAUST/Seis2Rock` GitHub repo at run time — an unpinned external dependency; no version/commit hash is pinned, so results could silently drift if that repo changes. |
 | Environment file | None (`requirements.txt`/`environment.yml` absent). |
-| Tests | None. No unit test for the Zoeppritz implementation, the rock-physics chain, or the forward operator beyond the single in-notebook gradient-flow sanity check and the syn-vs-obs sanity check at the training well. |
+| Tests | None. No unit test for the Zoeppritz implementation, the rock-physics chain, or the forward operator beyond the single in-notebook gradient-flow sanity check and the syn-vs-obs sanity check at the training well. Study A is the exception: its Cell 8 IS a real, passing benchmark test against an independent (Mathematica) implementation. |
 
-## 4. Scientific strengths (worth preserving, not rewriting)
+## 5. Scientific strengths (worth preserving, not rewriting)
 
 1. The full-trace, all-angle, exact-Zoeppritz seismic-consistency loss in
    GEOP592 is a genuine, non-trivial physics-guided architecture — it is
@@ -185,8 +289,13 @@ regime, Vsh/Sw rely more on the well-supervision term at low N).
    self-deceived baselines.
 4. Comparison against two independently published baselines (Seis2Rock,
    Das & Mukerji/PetroNet) rather than only against a self-built strawman.
+5. Study A's symbolic-derivative-plus-independent-benchmark method is a
+   genuinely rigorous, correctly-validated piece of work and directly
+   quantifies a real, citable geophysical result (gradient B ~14× more
+   Vp-error-sensitive than intercept A, at Smeaheia) that Objective 1 can
+   build on rather than re-derive.
 
-## 5. Scientific weaknesses / open risks
+## 6. Scientific weaknesses / open risks
 
 1. **Matched-forward-physics (inverse crime).** The single most important
    weakness: RWPGNN's forward operator is bit-identical to the Smeaheia
@@ -210,7 +319,17 @@ regime, Vsh/Sw rely more on the well-supervision term at low N).
    and is evaluated on the full section including well locations, while
    RWPGNN is evaluated only on held-out traces. This is an apples-to-
    oranges comparison baked into every current benchmark table.
-6. **No amplitude-fidelity, wavelet, or velocity/RMO uncertainty exists in
-   the code at all** (confirmed by text search) — Objective 2 has zero
-   existing implementation to build on; it starts from scratch.
-7. **Study A (velocity → Shuey A/B) does not exist in this repository.**
+6. **No amplitude-fidelity, wavelet, or processing-induced (NMO/RMO,
+   migration-velocity, angle-estimation) uncertainty exists in any of the
+   three notebooks** (confirmed by text search) — Objective 2 has zero
+   existing implementation of these specific mechanisms to build on.
+   Elastic-model-level Vp-error propagation into Shuey A/B (Study A) does
+   now exist and is a useful starting point, but is a different
+   mechanism (see §3) and does not by itself cover processing-induced
+   uncertainty.
+7. **Study A does not connect to reservoir properties (φ/Vsh/Sw) or to the
+   full-trace exact-Zoeppritz forward model used by the RWPGNN notebook.**
+   Closing this gap — rock-physics-level φ/Vsh/Sw perturbation → Vp/Vs/ρ →
+   Shuey/Zoeppritz AVA sensitivity → resolvability — is now the concrete,
+   well-scoped first task for Objective 1, rather than an open-ended
+   "build from scratch."

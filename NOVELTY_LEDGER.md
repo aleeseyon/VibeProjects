@@ -134,6 +134,43 @@ warn about. This must be independently re-verified against the actual
 Volve data room before Paper 3 is planned in detail — do not treat the
 numbers above as final.
 
+### C7. Symbolic linearized Vp-error → Shuey A/B sensitivity/error-propagation analysis with AVO-class-misclassification boundary (Study A, `Smeaheia_AVO_error_propagation.ipynb`)
+
+**Classification: KNOWN as a method, INCREMENTAL as an application.**
+
+The underlying method — differentiate Shuey/Aki-Richards attributes with
+respect to elastic parameters to get a local sensitivity coefficient, then
+map the resulting error envelope onto AVO-class space — is a natural,
+long-established extension of the AVO-class literature Study A itself
+correctly cites (Rutherford & Williams 1989, *Geophysics* 54, 680-688;
+Castagna, Swan & Foster 1998, *Geophysics* 63, 948-956; Castagna & Backus
+1993 eds., SEG *Offset-Dependent Reflectivity*). Symbolic/analytic AVO
+sensitivity and class-boundary analysis of this general kind is standard
+QI practice, not a new method. (These four citations are treated as
+correctly and reliably cited by the notebook's author — canonical, highly
+stable geophysics literature — and were not independently re-verified by
+web search in this pass, unlike the 2020s deep-learning literature in
+C1–C6, which was actively moving and needed checking.)
+
+**What is a genuine, small, defensible increment:** applying this
+machinery specifically to the Smeaheia CO₂-storage top-reservoir case,
+quantifying the ~14× asymmetry between k_A and k_B for this specific
+baseline, and showing the resulting Class III→IV misclassification
+threshold (~3-5% differential Vp error) is a real, useful, citable
+Smeaheia-specific result. It is a case study application of known methods,
+not a new method.
+
+**Action for Objective 1:** the genuinely open, potentially-novel step is
+NOT redoing this analysis — it is **extending the chain one physical layer
+further back**, from directly-perturbed Vp to perturbed reservoir
+properties (φ, Vsh, Sw) propagated through the Gassmann rock-physics model
+already used in the other two notebooks, so that resolvability can be
+stated in terms of φ/Vsh/Sw (what the thesis actually needs to say
+something about) rather than in terms of Vp (an intermediate elastic
+variable). This connects C7 to C4 and is the concrete next build step, not
+a new literature-novelty question — it is engineering integration, not a
+literature gap.
+
 ## Summary table
 
 | # | Contribution | Classification |
@@ -144,6 +181,7 @@ numbers above as final.
 | C4 | Property-specific resolvability under realistic AVA uncertainty (integrated framework) | POTENTIALLY NOVEL (strongest candidate) |
 | C5 | Uncertainty-aware physics-guided inversion w/ calibration + resolvability linkage | INCREMENTAL (re-scoped) |
 | C6 | Volve blind-well validation of resolvability/calibration | POTENTIALLY NOVEL (data-constrained) |
+| C7 | Study A: Vp-error → Shuey A/B sensitivity + AVO-class boundary (Smeaheia case) | KNOWN method / INCREMENTAL application — extending it to φ/Vsh/Sw via Gassmann is the real next step, feeding C4 |
 
 **Overall verdict:** The PhD as originally framed ("build a probabilistic
 physics-guided inversion and show it's better") is largely incremental
@@ -153,4 +191,8 @@ its center of gravity shifts from "build the method" (C1/C2/C5, mostly
 already done elsewhere) to "determine what is and isn't resolvable, and
 whether uncertainty tracks it" (C4, with C3 and C6 as supporting pieces).
 This is consistent with, and reinforces, Objective 1/Objective 2 being the
-load-bearing objectives of the thesis rather than Objective 3.
+load-bearing objectives of the thesis rather than Objective 3. Study A (C7)
+strengthens this conclusion in practice, not just in principle: it is a
+real, validated piece of Objective 1 infrastructure (AVO-attribute-level
+sensitivity) that already exists and only needs to be extended through the
+rock-physics chain to φ/Vsh/Sw to become the core of Paper 1.

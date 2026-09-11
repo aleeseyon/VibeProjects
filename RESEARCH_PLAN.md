@@ -7,9 +7,21 @@ below) rather than restating it unchanged.
 
 ## Changes from the original framing
 
-1. **Study A does not exist in this repository.** Everything below treats
-   the velocity→Shuey resolvability work as ground-up, not "review and
-   incorporate."
+1. **Study A exists and has been added to the repository**
+   (`Smeaheia_AVO_error_propagation.ipynb`, supplied by the user after the
+   first Phase 0 pass, which had incorrectly found no trace of it). It is a
+   validated, symbolic (sympy) Vp-error → Shuey A/B sensitivity analysis at
+   the Smeaheia top reservoir, benchmarked to 5 decimals against an
+   independent Mathematica implementation. Per the master prompt's own
+   caution, it is an **elastic-model-level Vp perturbation** study, not a
+   processing-induced (NMO/RMO/migration-velocity/angle-error) uncertainty
+   study — no moveout or time/offset representation exists in it. Full
+   detail in `EXISTING_WORK_AUDIT.md` §3 and `NOVELTY_LEDGER.md` C7. The
+   task ahead is **extension, not construction**: propagate perturbations
+   in φ/Vsh/Sw (not Vp directly) through the same Gassmann rock-physics
+   model already used in the other two notebooks, so Study A's sensitivity
+   result is stated in terms of the actual reservoir properties this PhD
+   is about.
 2. **Objective 3 is narrower than originally scoped.** Li et al. (2024,
    Geophysics ×2) already publish field-validated probabilistic/Bayesian
    physics-guided petrophysical inversion. Objective 3 must center on
@@ -42,13 +54,19 @@ degradation experiment has been run. Treat them as fully open.
 
 **Paper 1 — load-bearing.** Rock-physics and AVA controls on property
 resolvability. This is now the paper the PhD's novelty case most depends
-on (NOVELTY_LEDGER C4). Should explicitly build and validate a velocity→
-Shuey-gradient resolvability chain (Study A, from scratch) anchored on
-Sarkar, Baumel & Larner (2002), extended to a rock-physics/AVA-class
-separability analysis for φ/Vsh/Sw specifically, and only then to a
-formal property-specific resolvability metric (built from first
-principles — Objective 1's instruction not to "invent an arbitrary index"
-before investigating established methods stands).
+on (NOVELTY_LEDGER C4). Study A already provides a validated Vp→Shuey-A/B
+sensitivity result at Smeaheia (NOVELTY_LEDGER C7) and should be preserved,
+cited, and **extended** — not rebuilt — in two directions: (a) push the
+perturbation one physical layer back, from Vp directly to φ/Vsh/Sw through
+Gassmann, so sensitivity is stated in the properties the thesis is about;
+(b) add the complementary, currently-absent processing-induced mechanism
+(moveout/velocity-analysis error → AVO gradient bias, anchored on Sarkar,
+Baumel & Larner 2002) as a second, distinct uncertainty source alongside
+the elastic-model-level one Study A already covers — the two must not be
+conflated (see EXISTING_WORK_AUDIT.md §3). Only after both are in hand
+should this move to a formal property-specific resolvability metric (built
+from first principles — Objective 1's instruction not to "invent an
+arbitrary index" before investigating established methods still stands).
 
 **Paper 2 — re-scoped.** Not "a new probabilistic PGNN" (largely done by
 Li et al. 2024). Instead: does a physics-guided inversion's predictive
@@ -75,7 +93,10 @@ just literature descriptions of it) is a Phase-1/pre-Phase-6 gating task.**
   add `environment.yml`; add `data/README.md` documenting the Smeaheia
   `.npz` provenance and a checksum.
 - Phase 2 — rock-physics/QI foundation notebooks (00–03 in the master
-  prompt's numbering), including building Study A from scratch.
+  prompt's numbering), including extending Study A: (a) φ/Vsh/Sw → Gassmann
+  → Vp/Vs/ρ → Shuey/Zoeppritz sensitivity chain, and (b) a new,
+  complementary processing-induced (moveout/velocity-analysis) uncertainty
+  notebook anchored on Sarkar, Baumel & Larner (2002).
 - Phase 3 — property-resolvability experiments (Objective 1 formalized).
 - Phase 4 — uncertainty-aware inversion, re-scoped per Paper 2 above.
 - Phase 5 — synthetic benchmark integrating Phases 3–4.
@@ -114,9 +135,12 @@ spec. Nothing beyond Phase 0 is started here.
 
 - Phase 2: Hertz-Mindlin/Gassmann/Batzle-Wang rock physics (already used
   correctly in existing notebooks — needs explanation, not re-derivation);
-  Shuey/Aki-Richards approximations vs. exact Zoeppritz; AVO classes.
-  Phase 2 also needs the **Study A build**, so: NMO/RMO mechanics, stacking
-  velocity error propagation into Shuey gradient (Sarkar et al. 2002).
+  Shuey/Aki-Richards approximations vs. exact Zoeppritz; AVO classes;
+  symbolic sensitivity analysis (already demonstrated correctly in Study
+  A — needs extending to φ/Vsh/Sw via Gassmann, not re-deriving). Phase 2
+  also needs, as new material: NMO/RMO mechanics and stacking-velocity
+  error propagation into the Shuey gradient (Sarkar, Baumel & Larner 2002)
+  — this is the processing-induced mechanism Study A does not cover.
 - Phase 3: sensitivity analysis, Fisher information basics, nonuniqueness/
   crossplot separability.
 - Phase 4: variational inference / MC dropout / ensembles basics (already
@@ -130,8 +154,10 @@ spec. Nothing beyond Phase 0 is started here.
 1. User reviews this Phase 0 package (`PHASE0_REPORT.md` + this file +
    `EXISTING_WORK_AUDIT.md` + `NOVELTY_LEDGER.md` +
    `literature/novelty_matrix.csv`) and either confirms or redirects scope.
-2. Locate or (re)build "Study A" (velocity → Shuey A/B) — confirm with the
-   user whether it exists elsewhere before rebuilding from scratch.
+2. Study A is now in the repository (`Smeaheia_AVO_error_propagation.ipynb`)
+   — confirm with the user whether any other prior work (e.g. a
+   petrophysical-property-level sensitivity study, or a processing/RMO
+   study) exists before assuming Objective 1 starts from Study A alone.
 3. Read the full text (not abstracts) of Li et al. (2024, geo2023-0214.1),
    Li et al. (2024, geo2023-0737.1), and Wu et al. (2024, geo2023-0135.1)
    — this is required before Paper 2's scope can be finalized, and is
