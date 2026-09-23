@@ -23,6 +23,15 @@ etc.) converging on the two notebooks above. Only these two survive on the
 current branch; the deleted intermediates are recoverable from git history
 if needed but are not treated as "current" work here.
 
+**Newer copy of the RW-PGNN notebook (checked 2026-09-23).** A later version of
+`GEOP592_RWPGNN_FINAL.ipynb` lives in `aleeseyon/GEOP592` (commit `6a5d942`,
+2026-09-17; 65 cells vs 54 here). A source diff shows **no changes to the physics
+cells** (rock physics, Zoeppritz, wavelet, loss). The additions are split-visualization,
+coherence "divergence" plots and revised learning-curve plots. Its key printed results
+match this copy: RW-PGNN to 4 decimals; PetroNet φ R² 0.9560 → 0.9582, which is
+run-to-run nondeterminism. It also shows the synthetic is loaded from
+`Seis2Rock/data/smeaheia_synthetic.npz`, i.e. it ships with the Seis2Rock repository.
+
 **Correction to the original Phase 0 pass.** The first version of this
 audit stated that "Existing Study A" did not exist anywhere in this
 repository, based on a text search of the two notebooks that were present

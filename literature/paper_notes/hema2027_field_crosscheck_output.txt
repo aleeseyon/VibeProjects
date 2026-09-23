@@ -1,0 +1,34 @@
+========================================================================================
+1. Study A elastic model vs measured Sognefjord ranges (both wells brine-saturated)
+========================================================================================
+32/4-1 Sognefjord  Vp mean  2975.5  mode   2840  min  2748.3 | Study A brine sand Vp 2200  -> -26.1% vs mean, BELOW measured min
+                    AI mean  6506.0  mode   5960  min  5695.7 | Study A brine sand AI 4730.0  -> -27.3% vs mean, BELOW measured min
+                    rho mean 2.180  range [2.050, 2.640] | Study A brine sand rho 2.150
+32/2-1 Sognefjord  Vp mean  2721.8  mode   2650  min  2436.5 | Study A brine sand Vp 2200  -> -19.2% vs mean, BELOW measured min
+                    AI mean  6033.8  mode   5720  min  5113.6 | Study A brine sand AI 4730.0  -> -21.6% vs mean, BELOW measured min
+                    rho mean 2.235  range [1.973, 2.685] | Study A brine sand rho 2.150
+
+========================================================================================
+2. Normal-incidence R0 (= Shuey A) of Study A caprock over the measured sand
+   (caprock values themselves are NOT reported by Hema et al.; unverified)
+========================================================================================
+Study A: caprock AI 6110.0; A(brine sand, Study A) = -0.1273; A(CO2 sand, Study A) = -0.2137
+32/4-1: A using measured sand AI mean = +0.0314; using mode = -0.0124
+32/2-1: A using measured sand AI mean = -0.0063; using mode = -0.0330
+
+========================================================================================
+3. GEOP592 RockPhysicsTL at measured mean (phi, Vclay), Sw=1, vs measured mean Vp, rho
+========================================================================================
+well / formation            phi    Vcl |  Vp meas |  Vp@10MPa  Vp@15MPa Vp@24.1MPa | rho meas  rho mod
+32/4-1 Sognefjord         0.292  0.374 |   2975.5 |    2214.6    2266.5     2335.2 |    2.180    2.138   (Vp error @24.1MPa -21.5%)
+32/4-1 Fensfjord          0.235  0.414 |   3231.1 |    2327.0    2379.6     2449.1 |    2.269    2.232   (Vp error @24.1MPa -24.2%)
+32/2-1 Sognefjord         0.263  0.405 |   2721.8 |    2272.3    2324.9     2394.5 |    2.235    2.187   (Vp error @24.1MPa -12.0%)
+32/2-1 Fensfjord          0.226  0.370 |   2896.6 |    2335.9    2387.8     2456.4 |    2.287    2.245   (Vp error @24.1MPa -15.2%)
+
+========================================================================================
+4. Matrix density implied by published density & density-porosity means (rho_fl = 1.0 g/cc)
+========================================================================================
+32/4-1 Sognefjord : rho_ma = (rho_b - phi*rho_fl)/(1-phi) = 2.667 g/cc
+32/4-1 Fensfjord  : rho_ma = (rho_b - phi*rho_fl)/(1-phi) = 2.658 g/cc
+32/2-1 Sognefjord : rho_ma = (rho_b - phi*rho_fl)/(1-phi) = 2.676 g/cc
+32/2-1 Fensfjord  : rho_ma = (rho_b - phi*rho_fl)/(1-phi) = 2.662 g/cc
