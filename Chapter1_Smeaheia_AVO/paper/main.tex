@@ -154,7 +154,7 @@ We also evaluate the linearised gradient of \citet{aki1980},
 \BAR=\frac12\frac{\Delta\VP}{\bar V_\mathrm{P}}-2\left(\frac{\bar V_\mathrm{S}}{\bar V_\mathrm{P}}\right)^2\left(\frac{\Delta\rho}{\bar\rho}+2\frac{\Delta\VS}{\bar V_\mathrm{S}}\right),
 \label{eq:BAR}
 \end{equation}
-of which Shuey's expression is a re-parameterisation that agrees to first order in the contrasts.
+of which Shuey's expression is a re-parameterisation that agrees to first order in the contrasts. Approximations that retain terms quadratic in the elastic contrasts also exist \citep{wang1999}; we do not use them here, because the exact solution is available at negligible cost.
 
 \subsection*{Verification}
 
@@ -313,7 +313,7 @@ Common-mode errors of $\pm10\%$ also move $B$ when it is computed from exact ref
 
 \subsection*{What exact reflectivity changes}
 
-The conclusion drawn from two-term Shuey reflectivity survives exact reflectivity: differential $\VP$ errors of a few percent can change the apparent AVO class at the Smeaheia top reservoir. Its magnitude does not survive unchanged. At the contrasts of this interface ($\Delta\VP/\bar V_\mathrm{P}\approx-0.29$), terms of second order in the contrasts are not negligible. The two first-order parameterisations, Shuey and Aki--Richards, bracket the exact tangent gradient from opposite sides (Table~\ref{tab:thr}). Two-term Shuey therefore overstates the vulnerability of the classification by 17\%--20\% in required error magnitude, and it produces spurious crossings for reservoir-only and common-mode errors. We did not decompose the Shuey--Aki--Richards difference into individual second-order terms. The attribution to second-order contrast terms rests on the small-contrast convergence test, not on an explicit expansion.
+The conclusion drawn from two-term Shuey reflectivity survives exact reflectivity: differential $\VP$ errors of a few percent can change the apparent AVO class at the Smeaheia top reservoir. Its magnitude does not survive unchanged. At the contrasts of this interface ($\Delta\VP/\bar V_\mathrm{P}\approx-0.29$), terms of second order in the contrasts are not negligible. The two first-order parameterisations, Shuey and Aki--Richards, bracket the exact tangent gradient from opposite sides (Table~\ref{tab:thr}). Two-term Shuey therefore overstates the vulnerability of the classification by 17\%--20\% in required error magnitude, and it produces spurious crossings for reservoir-only and common-mode errors. We did not decompose the Shuey--Aki--Richards difference into individual second-order terms. The attribution to second-order contrast terms rests on the small-contrast convergence test, not on an explicit expansion. The quadratic-in-contrast expressions of \citet{wang1999} would allow such a decomposition.
 
 \subsection*{Which gradient should define the class?}
 
@@ -388,6 +388,9 @@ Rutherford, S. R., and R. H. Williams, 1989, Amplitude-versus-offset variations 
 
 \bibitem[{Shuey(1985)}]{shuey1985}
 Shuey, R. T., 1985, A simplification of the Zoeppritz equations: Geophysics, \textbf{50}, 609--614, doi: 10.1190/1.1441936.
+
+\bibitem[{Wang(1999)}]{wang1999}
+Wang, Y., 1999, Approximations to the Zoeppritz equations and their use in AVO analysis: Geophysics, \textbf{64}, 1920--1927, doi: 10.1190/1.1444698.
 
 \bibitem[{Wiggins et~al.(1983)Wiggins, Kenny, and McClure}]{wiggins1983}
 Wiggins, R., G. S. Kenny, and C. D. McClure, 1983, A method for determining and displaying the shear-velocity reflectivities of a geologic formation: European Patent Application 0113944.
