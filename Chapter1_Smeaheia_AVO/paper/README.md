@@ -37,7 +37,8 @@ Alternatives, in order:
 Items 1–2 are the most important and can be computed with the existing notebook engine.
 
 ## Before submission (red `Author note` items in the PDF)
-1. Authors, affiliations, corresponding e-mail.
+1. Confirm the affiliations (the first author's KFUPM affiliation is assumed) and add the corresponding author and e-mail.
+1a. Review the generative-AI disclosure in the Acknowledgments. SEG requires authors to disclose AI use clearly.
 2. The CO₂ fluid-property source and the conditions used in the Gassmann substitution. The source notebook cites Batzle & Wang (1992), which does not provide a CO₂ equation of state.
 3. Justify the soft-sand end member, or recalibrate to the well data and re-run the notebook.
 4. Acknowledgments. Archive the notebook with a DOI and cite it in the Data and Materials Availability section.
