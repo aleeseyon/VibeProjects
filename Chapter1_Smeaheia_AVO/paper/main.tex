@@ -13,6 +13,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{siunitx}
 \usepackage{setspace}
 \usepackage[mathlines]{lineno}
@@ -53,8 +54,8 @@ King Fahd University of Petroleum and Minerals (KFUPM), Dhahran, Saudi Arabia}\\
 
 % ===========================================================================
 \section*{ABSTRACT}
-% 246 words (GEOPHYSICS limit: 250)
-Amplitude-variation-with-offset (AVO) classification of the top of a CO$_2$-charged reservoir depends on the P-wave velocities assigned to the caprock and the reservoir. We derive closed-form sensitivities of the two-term Shuey intercept $A$ and gradient $B$ to relative P-velocity errors, including the dependence of Poisson's ratio on $\VP$. We validate the symbolic implementation against an independent derivation and apply it to a Draupne shale over CO$_2$-saturated Sognefjord sand model of the Smeaheia storage site, northern North Sea. The baseline response is Class III ($A_0=-0.214$, $B_0=-0.021$). The intercept stays negative for all errors within $\pm10\%$, but the gradient is close to zero and highly sensitive. Two-term Shuey reflectivity predicts an apparent Class III$\to$IV transition at a minimum error-vector magnitude of 4.44\%. We recompute this threshold with exact Zoeppritz reflectivity, implemented twice and validated to $2\times10^{-15}$ against a closed-form solution, energy conservation, and two open-source libraries. The exact normal-incidence gradient raises the threshold to 5.58\%, and a two-term least-squares fit over 0\textdegree--30\textdegree{} raises it to 8.23\%. Two-term Shuey therefore understates the error needed for misclassification by about 20\%, but the misclassification itself is physical. Common-mode velocity errors do not cancel in $B$: with Poisson's ratio treated as a function of $\VP$, the first-order caprock sensitivity changes sign. Published seismic-to-well $\VP$ prediction errors in the Smeaheia reservoir interval are 13\%--17\% of the mean log velocity. At that level, AVO class assignment at this interface should be regarded as uncertain unless the elastic model is independently constrained.
+% word count checked at build (GEOPHYSICS limit: 250)
+Amplitude-variation-with-offset (AVO) classification of the top of a CO$_2$-charged reservoir depends on the P-wave velocities assigned to the caprock and the reservoir. We derive closed-form sensitivities of the two-term Shuey intercept $A$ and gradient $B$ to relative P-velocity errors, including the dependence of Poisson's ratio on $\VP$. We validate the symbolic implementation against an independent derivation and apply it to a Draupne shale over CO$_2$-saturated Sognefjord sand model of the Smeaheia storage site, northern North Sea. The baseline response is Class III ($A_0=-0.214$, $B_0=-0.021$). The intercept stays negative for all errors within $\pm10\%$; the gradient is near zero and highly sensitive. Two-term Shuey reflectivity predicts an apparent Class III$\to$IV transition at a minimum error-vector magnitude of 4.44\%. We recompute this threshold with exact Zoeppritz reflectivity validated to $2\times10^{-15}$. The exact normal-incidence gradient raises the threshold to 5.58\%, and a two-term least-squares fit over 0\textdegree--30\textdegree{} raises it to 8.23\%. Two-term Shuey therefore understates the error needed for misclassification by about 20\%, but the misclassification itself is physical. A symbolic second-order expansion shows that the Shuey gradient contains no second-order term; its bias is a third-order artifact of the Poisson's-ratio parameterisation. Common-mode velocity errors do not cancel in $B$: with Poisson's ratio treated as a function of $\VP$, the first-order caprock sensitivity changes sign. Published seismic-to-well $\VP$ prediction errors in the Smeaheia reservoir interval are 13\%--17\% of the mean log velocity. At that level, AVO class assignment at this interface is uncertain unless the elastic model is independently constrained.
 
 % ===========================================================================
 \section*{INTRODUCTION}
@@ -65,12 +66,13 @@ Amplitude-preserving processing aims to retain relative amplitudes with angle, b
 
 For CO$_2$-storage monitoring, a velocity-induced change of AVO class has a direct interpretational cost. If velocity errors turn a genuine Class III CO$_2$ response into an apparent Class IV, the interpreter may reject a correct CO$_2$ interpretation or misplace a plume boundary. The concern is sharpened at Smeaheia because the brine-sand reference response lies close to $B=0$ (this study), so fluid discrimination relies on small gradient differences.
 
-This paper asks a narrow, quantitative question: how large must relative errors in the caprock and reservoir P-velocities be before the AVO class of the Smeaheia top reservoir changes, and how much of the answer depends on the reflectivity approximation used? We make four contributions:
+This paper asks a narrow, quantitative question: how large must relative errors in the caprock and reservoir P-velocities be before the AVO class of the Smeaheia top reservoir changes, and how much of the answer depends on the reflectivity approximation used? We make five contributions:
 \begin{enumerate}
 \item a closed-form sensitivity analysis of the \citet{shuey1985} intercept and gradient to layer $\VP$ errors, cross-validated against an independent symbolic derivation;
 \item the total (chain-rule) sensitivity of the gradient when Poisson's ratio is treated as a function of $\VP$, and a demonstration that the fixed-Poisson's-ratio sensitivity is misleading;
 \item a machine-precision exact-Zoeppritz \citep{zoeppritz1919} recomputation of the class-change threshold, which separates approximation artifacts from physical effects;
-\item a quantification of how strongly the threshold depends on the angle aperture used to estimate the gradient.
+\item a quantification of how strongly the threshold depends on the angle aperture used to estimate the gradient;
+\item a symbolic second-order expansion of the exact gradient that identifies the origin of the Shuey bias and places the quadratic approximation of \citet{wang1999} within the complete second-order result.
 \end{enumerate}
 
 % ===========================================================================
@@ -154,7 +156,23 @@ We also evaluate the linearised gradient of \citet{aki1980},
 \BAR=\frac12\frac{\Delta\VP}{\bar V_\mathrm{P}}-2\left(\frac{\bar V_\mathrm{S}}{\bar V_\mathrm{P}}\right)^2\left(\frac{\Delta\rho}{\bar\rho}+2\frac{\Delta\VS}{\bar V_\mathrm{S}}\right),
 \label{eq:BAR}
 \end{equation}
-of which Shuey's expression is a re-parameterisation that agrees to first order in the contrasts. Approximations that retain terms quadratic in the elastic contrasts also exist \citep{wang1999}; we do not use them here, because the exact solution is available at negligible cost.
+of which Shuey's expression is a re-parameterisation that agrees to first order in the contrasts.
+
+\subsection*{Second-order expansion of the gradient}
+
+To explain the differences between the gradient estimators, we expand them in the mean-referenced relative contrasts $a=\Delta\VP/\bar V_\mathrm{P}$, $b=\Delta\VS/\bar V_\mathrm{S}$, and $r=\Delta\rho/\bar\rho$, at fixed $k=\bar V_\mathrm{S}/\bar V_\mathrm{P}$. The layer values are $X_{1,2}=\bar X(1\mp x/2)$, with $x$ the relative contrast of $X$. A symbolic series expansion of the exact tangent gradient (Appendix~A) gives
+\begin{equation}
+\Btan=\BAR+\underbrace{a\,\BAR}_{\text{reference angle}}+\underbrace{k^3(r+2b)^2}_{\text{shear}}\;\underbrace{-\;\tfrac{k}{4}\,r^2}_{\text{density}}+O(\chi^3),
+\label{eq:B2}
+\end{equation}
+where $\chi$ denotes the magnitude of the contrasts. The same expansion of the Shuey gradient (equation~\ref{eq:B}) gives
+\begin{equation}
+B_\mathrm{Shuey}=\BAR+O(\chi^3),
+\label{eq:Bsh}
+\end{equation}
+that is, the Shuey gradient has no second-order term at all.
+
+\citet{wang1999} derived a quadratic approximation of $\RPP$, his equation 10. In terms of the mean of the incidence and transmission angles, $\bar\theta$ (his equation 6), its only second-order term is $(\bar\beta/\bar\alpha)^3\cos\bar\theta\sin^2\bar\theta\,(\Delta\rho/\bar\rho+2\Delta\beta/\bar\beta)^2$. The gradient of this term is exactly the shear term of equation~\ref{eq:B2}. Wang obtains his approximation after assuming $(\Delta\rho/\bar\rho)^2\approx0$ (his equation A-10), which removes the density term. The reference-angle term arises because the linearised formulas are written in $\bar\theta$, whereas the AVO gradient is measured against the incidence angle; since $\sin^2\bar\theta\approx(\bar V_\mathrm{P}/V_{\mathrm{P}1})^2\sin^2\theta$ at small angles, converting between the two multiplies the gradient by a positive factor. Equations~\ref{eq:B2} and \ref{eq:Bsh} were derived with SymPy from the explicit solution of Appendix~A and from equation~\ref{eq:B}. They were verified numerically by scaling the Smeaheia contrasts by $s=1$ to $1/16$: the residuals decrease as $s^3$ and converge to the symbolic third-order coefficients \nb{\S11.1--11.2}.
 
 \subsection*{Verification}
 
@@ -308,12 +326,54 @@ To first order along $\phi=135^\circ$, the fixed-$\sigma$ sensitivity predicts t
 
 Common-mode errors of $\pm10\%$ also move $B$ when it is computed from exact reflectivity. The exact tangent gradient changes from $-0.0299$ to $-0.0433$ ($+10\%$) and to $-0.0117$ ($-10\%$), while $A$ is exactly invariant \nb{\S9.6}. The reason is that exact $\RPP$ depends only on velocity ratios and density ratios. Scaling $\VP$ in both layers while holding $\VS$ fixed changes $\VS/\VP$, and hence $\sigma$, in each layer.
 
+\subsection*{Origin of the Shuey bias}
+
+Table~\ref{tab:dec} decomposes the two baseline gradients by order in the contrasts \nb{\S11.3}. The exact tangent gradient is almost entirely first plus second order. Aki--Richards ($-0.04450$) plus the complete second-order term ($+0.01455$) gives $-0.02996$, against the exact $-0.02994$. The largest second-order contribution is the reference-angle term ($+0.01272$), followed by the shear term of \citet{wang1999} ($+0.00462$) and the density term ($-0.00279$). The Shuey gradient has no second-order contribution. Its third-order term, however, is large ($+0.02163$) and overshoots the missing second-order correction. The net result is a gradient $0.00882$ closer to $B=0$ than the exact value. The bias of the Shuey gradient toward the class boundary is therefore a third-order artifact of its Poisson's-ratio parameterisation, not an incomplete second-order correction.
+
+\begin{table}[htbp]
+\centering
+\caption{Decomposition of the baseline gradient by order in the relative contrasts ($a=-0.2857$, $b=-0.0168$, $r=-0.1461$, $k=0.5231$) \nb{\S11.3}.}
+\label{tab:dec}
+\begin{tabular}{lrr}
+\toprule
+Contribution & Exact tangent $\Btan$ & Two-term Shuey \\
+\midrule
+First order ($\BAR$) & $-0.04450$ & $-0.04450$ \\
+Second order: reference angle, $a\BAR$ & $+0.01272$ & \multirow{3}{*}{$0$} \\
+Second order: shear, $k^3(r+2b)^2$ & $+0.00462$ & \\
+Second order: density, $-kr^2/4$ & $-0.00279$ & \\
+Third order & $+0.00037$ & $+0.02163$ \\
+Fourth and higher orders & $-0.00035$ & $+0.00176$ \\
+\midrule
+Total & $-0.02994$ & $-0.02111$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The second-order gradients also reproduce the class boundary (Table~\ref{tab:thr2}) \nb{\S11.4}. The complete second-order gradient places the $B=0$ threshold within 0.12 percentage points of the exact tangent value. Wang's equation 10 places it 0.19--0.20 points lower. Because converting between $\bar\theta$ and the incidence angle multiplies Wang's entire gradient by a positive factor, the choice of angle changes its baseline value ($-0.03053$ when converted to the incidence angle, $-0.03988$ when $\bar\theta$ is read as the incidence angle) but not its threshold. The remaining shortfall is due to the omitted density term.
+
+\begin{table}[htbp]
+\centering
+\caption{Baseline gradient and $B=0$ threshold $|r|$ (\%) for the second-order gradients, with the exact tangent and two-term Shuey values for reference \nb{\S11.4}.}
+\label{tab:thr2}
+\begin{tabular}{lrrr}
+\toprule
+Estimator & $B_0$ & $\phi=135^\circ$ & Min.\ $|r|$ ($\phi$) \\
+\midrule
+Exact, to second order (equation~\ref{eq:B2}) & $-0.02996$ & 5.876 & 5.697 (149.2\textdegree) \\
+\citet{wang1999}, equation 10, incidence angle & $-0.03053$ & 5.554 & 5.390 (149.0\textdegree) \\
+Zoeppritz tangent (exact) & $-0.02994$ & 5.755 & 5.580 (149.2\textdegree) \\
+Two-term Shuey & $-0.02111$ & 4.752 & 4.444 (156.6\textdegree) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 % ===========================================================================
 \section*{DISCUSSION}
 
 \subsection*{What exact reflectivity changes}
 
-The conclusion drawn from two-term Shuey reflectivity survives exact reflectivity: differential $\VP$ errors of a few percent can change the apparent AVO class at the Smeaheia top reservoir. Its magnitude does not survive unchanged. At the contrasts of this interface ($\Delta\VP/\bar V_\mathrm{P}\approx-0.29$), terms of second order in the contrasts are not negligible. The two first-order parameterisations, Shuey and Aki--Richards, bracket the exact tangent gradient from opposite sides (Table~\ref{tab:thr}). Two-term Shuey therefore overstates the vulnerability of the classification by 17\%--20\% in required error magnitude, and it produces spurious crossings for reservoir-only and common-mode errors. We did not decompose the Shuey--Aki--Richards difference into individual second-order terms. The attribution to second-order contrast terms rests on the small-contrast convergence test, not on an explicit expansion. The quadratic-in-contrast expressions of \citet{wang1999} would allow such a decomposition.
+The conclusion drawn from two-term Shuey reflectivity survives exact reflectivity: differential $\VP$ errors of a few percent can change the apparent AVO class at the Smeaheia top reservoir. Its magnitude does not survive unchanged. At the contrasts of this interface ($\Delta\VP/\bar V_\mathrm{P}\approx-0.29$), the second-order correction to the gradient ($+0.0146$) is a third of the first-order value. Aki--Richards omits it, and Shuey replaces it with a larger third-order term, so the two bracket the exact tangent gradient from opposite sides (Tables~\ref{tab:thr} and \ref{tab:dec}). Two-term Shuey therefore overstates the vulnerability of the classification by 17\%--20\% in required error magnitude, and it produces spurious crossings for reservoir-only and common-mode errors. Where a closed-form gradient is preferred to the exact solution, equation~\ref{eq:B2} is the appropriate choice at contrasts of this size: it reproduces the exact gradient to $2\times10^{-5}$ and the class threshold to about 0.1 percentage points. Wang's (1999) equation 10 is nearly as accurate, provided its mean angle is converted to the incidence angle when a gradient value is reported.
 
 \subsection*{Which gradient should define the class?}
 
@@ -341,6 +401,8 @@ The brine-sand $\VP$ of the reference model (\SI{2200}{m/s}) is 19.2\% and 26.1\
 A symbolic implementation of the Shuey intercept and gradient, cross-validated against an independent derivation, shows that the Class III baseline of the Smeaheia top reservoir has a robust intercept but a gradient close to zero. A Class III$\to$IV misclassification is physically possible within $\pm10\%$ P-velocity errors when the caprock velocity is underestimated relative to the reservoir.
 
 The two-term Shuey threshold (minimum error magnitude 4.44\%) is biased low. The exact tangent gradient gives 5.58\%, and a 0\textdegree--30\textdegree{} two-term fit to exact reflectivity gives 8.23\%. The Shuey threshold is therefore 17\%--20\% below the exact tangent threshold. This offset is an approximation artifact; the crossing itself is not.
+
+The origin of this bias is identified by a symbolic second-order expansion. The exact gradient equals the Aki--Richards gradient plus a reference-angle, a shear, and a density term; to second order this reproduces the exact gradient at Smeaheia to $2\times10^{-5}$. The Shuey gradient has no second-order term, and its proximity to the exact value comes from a third-order term that overshoots.
 
 The fixed-Poisson's-ratio sensitivity ($k_B=-31.28$) does not describe the physical response. Once $\sigma$ is allowed to vary with $\VP$, common-mode $\VP$ errors no longer cancel in $B$, and the first-order caprock sensitivity changes sign.
 
